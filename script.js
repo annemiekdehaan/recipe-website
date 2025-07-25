@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('details-title')) {
     loadDetails();
   }
+  // Als er een lijst voor komende maaltijden op de homepagina aanwezig is,
+  // laad deze in en stel een scrolllistener in voor het vergroten van het
+  // item dat het dichtst bij het midden staat.
+  if (document.getElementById('home-upcoming-list')) {
+    renderHomeUpcoming();
+    const upcomingListEl = document.getElementById('home-upcoming-list');
+    upcomingListEl.addEventListener('scroll', () => {
+      updateActiveHomeItem();
+    });
+  }
 });
 
 // Haal recepten op uit localStorage. Als er nog niets is opgeslagen, geef een lege array terug.
@@ -22,6 +32,94 @@ function getRecipes() {
     console.error('Fout bij het parsen van recepten:', err);
     return [];
   }
+}
+
+// -------------------------------
+// Komende maaltijden voor homepagina
+// Deze helpers tonen een lijst met geplande maaltijden op de indexpagina.
+// Ze lijken op de implementatie in upcoming.js maar zijn hier geïntegreerd
+// zodat we geen extra script hoeven in te laden.
+function loadScheduleHome() {
+  const raw = JSON.parse(localStorage.getItem('schedule')) || {};
+  const normalized = {};
+  Object.keys(raw).forEach((date) => {
+    const val = raw[date];
+    if (val && typeof val === 'object') {
+      normalized[date] = val;
+    } else if (typeof val === 'string') {
+      normalized[date] = { id: val };
+    }
+  });
+  return normalized;
+}
+
+function renderHomeUpcoming() {
+  const listEl = document.getElementById('home-upcoming-list');
+  if (!listEl) return;
+  const schedule = loadScheduleHome();
+  const allRecipes = getRecipes();
+  const entries = [];
+  const today = new Date();
+  Object.keys(schedule).forEach((dateStr) => {
+    const entry = schedule[dateStr];
+    const dateObj = new Date(dateStr);
+    // alleen toekomstige of huidige data weergeven
+    if (!isNaN(dateObj) && dateObj >= new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+      let title = '';
+      if (entry.id) {
+        const rec = allRecipes.find((r) => r.id === entry.id);
+        title = rec ? rec.title : '';
+      } else if (entry.name) {
+        title = entry.name;
+      } else if (entry.unknown) {
+        title = 'Onbekend';
+      }
+      entries.push({ date: dateObj, title });
+    }
+  });
+  entries.sort((a, b) => a.date - b.date);
+  listEl.innerHTML = '';
+  if (entries.length === 0) {
+    listEl.innerHTML = '<p>Er zijn nog geen geplande maaltijden.</p>';
+    return;
+  }
+  entries.forEach(({ date, title }) => {
+    const item = document.createElement('div');
+    item.className = 'upcoming-item';
+    const dateString = date.toLocaleDateString('nl-NL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    item.innerHTML = `<h4>${title || 'Onbekend'}</h4><p>${dateString}</p>`;
+    listEl.appendChild(item);
+  });
+  // markeer standaard het eerste item als actief
+  updateActiveHomeItem();
+}
+
+function updateActiveHomeItem() {
+  const listEl = document.getElementById('home-upcoming-list');
+  if (!listEl) return;
+  const items = Array.from(listEl.children);
+  if (!items.length) return;
+  const listRect = listEl.getBoundingClientRect();
+  const centerY = listRect.top + listRect.height / 2;
+  let closestItem = null;
+  let minDistance = Infinity;
+  items.forEach((item) => {
+    if (!(item instanceof HTMLElement)) return;
+    const rect = item.getBoundingClientRect();
+    const itemCenter = rect.top + rect.height / 2;
+    const distance = Math.abs(itemCenter - centerY);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestItem = item;
+    }
+  });
+  items.forEach((itm) => itm.classList.remove('active'));
+  if (closestItem) closestItem.classList.add('active');
 }
 
 // Laad alle recepten op de indexpagina en maak voor elk recept een kaart aan.

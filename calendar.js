@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const editor = document.getElementById('schedule-editor');
   const selectedDateEl = document.getElementById('selected-date');
   const selectEl = document.getElementById('schedule-select');
+  // Extra input voor het invoeren van een nieuw gerecht, wordt getoond wanneer
+  // "custom" is geselecteerd in de dropdown.
+  const customInput = document.getElementById('custom-meal');
   const saveBtn = document.getElementById('save-schedule');
   const deleteBtn = document.getElementById('delete-schedule');
   const cancelBtn = document.getElementById('cancel-schedule');
@@ -41,7 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Haal planning op uit localStorage (object met keys als YYYY-MM-DD en values als recipeId)
   function loadSchedule() {
-    return JSON.parse(localStorage.getItem('schedule')) || {};
+    const raw = JSON.parse(localStorage.getItem('schedule')) || {};
+    // Converteer eventueel oude stringwaardes (recipeId's) naar objectvorm { id: <id> }
+    const normalized = {};
+    Object.keys(raw).forEach((date) => {
+      const val = raw[date];
+      if (val && typeof val === 'object') {
+        normalized[date] = val;
+      } else if (typeof val === 'string') {
+        normalized[date] = { id: val };
+      } else {
+        // onbekend type, sla over
+      }
+    });
+    return normalized;
   }
 
   function saveSchedule(schedule) {
@@ -74,13 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
           html += '<td></td>';
         } else {
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-          const recipeId = schedule[dateStr];
-          const recipe = recipes.find((r) => r.id === recipeId);
+          const entry = schedule[dateStr];
           html += `<td data-date="${dateStr}">`;
           html += `<span class="day-number">${day}</span>`;
-          if (recipe) {
-            const title = recipe.title.length > 18 ? recipe.title.slice(0, 18) + '…' : recipe.title;
-            html += `<span class="scheduled-title">${title}</span>`;
+          if (entry) {
+            let titleText = '';
+            if (entry.id) {
+              const rec = recipes.find((r) => r.id === entry.id);
+              titleText = rec ? rec.title : '';
+            } else if (entry.name) {
+              titleText = entry.name;
+            } else if (entry.unknown) {
+              titleText = 'Onbekend';
+            }
+            if (titleText) {
+              const shortTitle = titleText.length > 18 ? titleText.slice(0, 18) + '…' : titleText;
+              html += `<span class="scheduled-title">${shortTitle}</span>`;
+            }
           }
           html += '</td>';
           day++;
@@ -102,12 +128,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toon editor
     editor.classList.remove('hidden');
     selectedDateEl.textContent = dateStr;
-    // Stel dropdown in
+    // Stel dropdown in op basis van huidige planning
     const schedule = loadSchedule();
-    const recipeId = schedule[dateStr] || '';
-    selectEl.value = recipeId;
-    // Toon of verberg verwijderknop
-    deleteBtn.style.display = recipeId ? 'inline-block' : 'none';
+    const entry = schedule[dateStr];
+    if (!entry) {
+      selectEl.value = '';
+      customInput.style.display = 'none';
+      customInput.value = '';
+      deleteBtn.style.display = 'none';
+    } else if (entry.id) {
+      selectEl.value = entry.id;
+      customInput.style.display = 'none';
+      customInput.value = '';
+      deleteBtn.style.display = 'inline-block';
+    } else if (entry.name) {
+      selectEl.value = 'custom';
+      customInput.style.display = 'block';
+      customInput.value = entry.name;
+      deleteBtn.style.display = 'inline-block';
+    } else if (entry.unknown) {
+      selectEl.value = 'unknown';
+      customInput.style.display = 'none';
+      customInput.value = '';
+      deleteBtn.style.display = 'inline-block';
+    } else {
+      selectEl.value = '';
+      customInput.style.display = 'none';
+      customInput.value = '';
+      deleteBtn.style.display = 'none';
+    }
   }
 
   saveBtn.addEventListener('click', () => {
@@ -115,7 +164,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const chosen = selectEl.value;
     const schedule = loadSchedule();
     if (chosen) {
-      schedule[dateStr] = chosen;
+      if (chosen === 'unknown') {
+        schedule[dateStr] = { unknown: true };
+      } else if (chosen === 'custom') {
+        const name = customInput.value.trim();
+        if (name) {
+          schedule[dateStr] = { name };
+        } else {
+          // Als er geen naam is ingevoerd, sla niets op
+          delete schedule[dateStr];
+        }
+      } else {
+        schedule[dateStr] = { id: chosen };
+      }
     }
     saveSchedule(schedule);
     editor.classList.add('hidden');
@@ -146,11 +207,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function populateRecipeSelect() {
     selectEl.innerHTML = '<option value="">-- Kies een gerecht --</option>';
+    // Voeg opties toe voor alle bestaande gerechten
     recipes.forEach((recipe) => {
       const option = document.createElement('option');
       option.value = recipe.id;
       option.textContent = recipe.title;
       selectEl.appendChild(option);
+    });
+    // Optie voor onbekend/geen gerecht (nader te bepalen)
+    const unknownOption = document.createElement('option');
+    unknownOption.value = 'unknown';
+    unknownOption.textContent = 'Onbekend (nog te bepalen)';
+    selectEl.appendChild(unknownOption);
+    // Optie voor handmatig invoeren van een nieuw gerecht
+    const customOption = document.createElement('option');
+    customOption.value = 'custom';
+    customOption.textContent = 'Nieuw gerecht invoeren';
+    selectEl.appendChild(customOption);
+    // Voeg een eventlistener toe om het invoerveld te tonen of te verbergen
+    selectEl.addEventListener('change', () => {
+      if (selectEl.value === 'custom') {
+        customInput.style.display = 'block';
+      } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+      }
     });
   }
 

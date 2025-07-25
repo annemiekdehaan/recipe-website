@@ -31,7 +31,11 @@
       <table id="calendar-table" class="calendar-table"></table>
       <div id="schedule-editor" class="schedule-editor hidden">
         <h3>Gerecht plannen op <span id="selected-date"></span></h3>
+        <!-- Select voor bestaande gerechten en speciale opties -->
         <select id="schedule-select"></select>
+        <!-- Extra invoerveld voor het handmatig invoeren van een nieuw gerecht. Dit wordt
+             pas zichtbaar wanneer de gebruiker "Nieuw gerecht invoeren" selecteert in de dropdown. -->
+        <input type="text" id="custom-meal" placeholder="Naam van nieuw gerecht" style="display:none;" />
         <div class="editor-buttons">
           <button id="save-schedule" class="button">Opslaan</button>
           <button id="delete-schedule" class="button secondary">Verwijder</button>
