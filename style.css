@@ -1,0 +1,1087 @@
+/*
+ * Global styles for the recipe website
+ *
+ * The design takes inspiration from modern minimalistic interfaces like those of OpenAI, with ample
+ * whitespace, a restrained colour palette and gentle visual hierarchy. The layout is responsive and
+ * adapts gracefully to different screen sizes using CSS grid and flexbox. Local variables defined
+ * in :root control colours, typography and spacing, making it easy to tweak the look and feel.
+ */
+
+:root {
+  /* Rijke donkere basis met paarse accenten en subtiele gradients geïnspireerd op
+     streamingplatforms als SkyShowtime. Deze variabelen sturen de rest van het ontwerp. */
+  --bg-color: #05070f;         /* bijna zwart met een blauwe ondertoon */
+  --card-bg: #111a32;         /* panelen en kaarten krijgen een donkerblauw vlak */
+  --primary-color: #8b5cf6;    /* primaire paarse accentkleur */
+  --secondary-color: #6d28d9;  /* iets donkerdere paarse tint voor hover */
+  --gradient-start: #8b5cf6;   /* gradientstart voor CTA-knoppen */
+  --gradient-end: #ec4899;     /* gradientend voor CTA-knoppen */
+  --text-color: #ffffff;       /* witte tekst voor maximale leesbaarheid */
+  --muted-text-color: #a5accf; /* gedempte lichtblauwe kleur voor toelichtingen */
+  --tag-bg: #18244a;           /* achtergrond voor tagknoppen */
+  --tag-border: #2e3d67;       /* randkleur voor tags en invoervelden */
+  --border-radius: 12px;       /* mild afgeronde hoeken */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --transition-fast: 0.2s;
+}
+
+/* Reset and base element styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* Anchor hover colours are set manually because CSS variables cannot be darkened directly */
+a:hover {
+  color: var(--secondary-color);
+}
+
+header {
+  /* Gebruik een lichte transparantie en een subtiele scheidingslijn voor de
+     navigatiebalk. Hierdoor blijft het navigatiegedeelte onderscheiden van
+     de inhoud zonder een harde lijn. */
+  background-color: rgba(10, 15, 41, 0.95);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+header nav a {
+  margin-left: 1.5rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+header nav a:hover {
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+/* Logo styling for the header. De logo heeft een vaste hoogte en schaalt de
+   breedte automatisch, zodat het binnen de navigatiebalk past. Een
+   flexcontainer zorgt voor een nette uitlijning. */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  height: 42px;
+  width: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Recipe grid on the index page */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.recipe-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  /* Geef afbeeldingen zonder foto een donkerblauwe achtergrond zodat ze beter
+     integreren met het thema en het contrast met witte placeholders verdwijnt. */
+  background-color: #193d6d;
+}
+
+.recipe-card .card-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recipe-card h3 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  /* Geef de titel van een recept een opvallende kleur, zodat deze zich onderscheidt
+     van de overige tekst en aansluit bij de gouden accenten. */
+  color: var(--primary-color);
+}
+
+.recipe-card p {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Details page */
+.details-hero {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  background-color: #2a2a2a;
+  margin-bottom: 1.5rem;
+}
+
+/* ----------- Hero sectie ----------- */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 360px;
+  background-image: url("images/hero.jpg");
+  background-size: cover;
+  background-position: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Donkere overlay zodat de tekst leesbaar blijft boven de achtergrond */
+  background: linear-gradient(to bottom, rgba(5, 7, 15, 0.4), rgba(5, 7, 15, 0.8));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.hero-content h2 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.hero-content p {
+  margin: 0 0 2rem;
+  font-size: 1.2rem;
+  color: var(--muted-text-color);
+}
+
+/* ----------- Zoek- en filtersectie ----------- */
+.search-section {
+  margin-top: -3rem;
+  padding: 2rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-section input {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--tag-border);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-section input::placeholder {
+  color: var(--muted-text-color);
+}
+.search-section input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+/* Tagfilters */
+#tags-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.tag {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+  background-color: var(--tag-bg);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.tag:hover {
+  border-color: var(--primary-color);
+}
+
+.tag.active {
+  /* Active tag krijgt een gradientrand en de tekstkleur verandert naar primaire kleur */
+  border-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) 1;
+  border-width: 2px;
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+/* Voor de labels in de detailpagina: geef iets kleinere padding */
+.tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.tag-list .tag {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+/* ----------- Receptkaarten en grid ----------- */
+.recipes-section h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.recipe-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+}
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.recipe-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background-color: #193d6d;
+}
+.recipe-card .card-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.recipe-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.recipe-card p {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.recipe-details h2 {
+  margin-top: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.recipe-details .meta {
+  color: var(--muted-text-color);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.recipe-details section {
+  margin-bottom: 2rem;
+}
+
+.recipe-details h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.recipe-details ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.recipe-details p {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--muted-text-color);
+}
+
+/* Builder page */
+.builder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.recipe-form {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.recipe-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Invoervelden voor tekst, e-mail, wachtwoord, textarea en select krijgen een donkere achtergrond en subtiele randen */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--border-radius);
+  /* Gebruik een zachtere randkleur geïnspireerd op de donkerblauwe tinten in het
+     kleurpalet voor een elegante overgang tussen het invulveld en de achtergrond */
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  background-color: #1c2a48;
+  color: var(--text-color);
+  border: 1px solid #2e3d67;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Voeg een aangepaste pijl toe aan select-elementen */
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a5accf' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.75rem;
+  padding-right: 2rem;
+}
+
+/* Accentueer veld bij focus */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  /* Voeg een subtiele gloed toe aan het actieve veld om de focus beter aan te geven */
+  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.25);
+}
+
+.form-group input[type="file"] {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.form-group img.preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-top: 0.75rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  /* Gebruik een kleurverloop voor alle primaire knoppen, geïnspireerd op de call‑to‑action
+     knoppen van streamingservices. */
+  background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.button.secondary {
+  /* Secundaire knop met donkere blauwtint zodat deze subtiel contrasteert met
+     de gouden primaire knop. */
+  background-color: #2e3d67;
+  color: #fff;
+}
+
+.button.secondary:hover {
+  background-color: #3a4e86;
+}
+
+/* Call‑to‑action knop voor de hero. Gebruikt een grote afgeronde vorm en
+   gradientkleur en een iets grotere lettergrootte. */
+.cta-button {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 999px;
+  background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.recipes-list {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.recipes-list h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.recipes-list table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.recipes-list th,
+.recipes-list td {
+  padding: 0.75rem;
+  text-align: left;
+  color: var(--text-color);
+}
+
+.recipes-list th {
+  border-bottom: 1px solid #1f2e59;
+  font-weight: 600;
+  color: var(--muted-text-color);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.recipes-list tr:nth-child(even) {
+  background-color: #1b2c51;
+}
+
+.recipes-list button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+}
+
+.recipes-list .edit-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.recipes-list .edit-btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.recipes-list .delete-btn {
+  background-color: #88300f;
+  color: #fff;
+}
+
+.recipes-list .delete-btn:hover {
+  background-color: #66250e;
+}
+
+/* ========================================================================
+   Detailpagina layout
+   De detailpagina toont een recept in een stijl die doet denken aan een
+   streamingdienst: een grote foto met een donkere gradientoverlay, een
+   overlappende titel en daaronder duidelijke secties voor beschrijving,
+   ingrediënten en labels. De terugknop gebruikt een afgeronde CTA-stijl.
+   ======================================================================== */
+
+/* Container voor de detailpagina geeft extra ruimte bovenaan zodat de
+   vaste navigatiebalk de inhoud niet overlapt. */
+.recipe-details-page {
+  padding-top: 2rem;
+}
+
+/* Omhulsende laag voor de hero-afbeelding. Beperkt de hoogte zodat de
+   afbeelding op desktop een prettige verhouding heeft. */
+.details-hero-wrapper {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+/* De heldere foto in de hero schaalt om de beschikbare ruimte te vullen. */
+.details-hero-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Donkere gradientoverlay over de onderzijde van de hero zodat de titel
+   altijd goed leesbaar is, ongeacht de onderliggende foto. */
+.details-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.1));
+}
+
+.details-overlay h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Inhoudgedeelte onder de hero. Deze container bevat secties voor
+   beschrijving, ingrediënten en labels. */
+.details-content {
+  margin-bottom: 3rem;
+}
+
+.details-content h3 {
+  color: var(--primary-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.details-content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--muted-text-color);
+}
+
+.details-content ul {
+  /* Basisstyling voor ongeordende lijsten in de detailpagina. We geven alleen
+     marge mee; het list-style wordt aan de browser overgelaten zodat
+     lijsten met ingrediënten bullets krijgen, maar taglijsten (met class
+     .tag-list) kunnen dit overschrijven. */
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--muted-text-color);
+}
+
+.details-content ul li {
+  margin-bottom: 0.3rem;
+}
+
+/* Stijl voor de terugknop op de detailpagina. Door de combinatie van
+   .cta-button en .back-button krijgt deze knop dezelfde gradient en
+   afgeronde vorm als andere call‑to‑action knoppen, maar een
+   compacter formaat. */
+.back-button {
+  margin-top: 2rem;
+  display: inline-block;
+  padding: 0.7rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* =====================
+   Beoordeling (ratings)
+   ===================== */
+
+.stars {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+.star {
+  font-size: 1.6rem;
+  color: #444b6e;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.star.filled {
+  color: var(--primary-color);
+}
+.star:hover,
+.star:hover ~ .star {
+  color: var(--secondary-color);
+}
+.rating-average {
+  color: var(--muted-text-color);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   Kalender/planning stijl
+   ========================= */
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.calendar-controls button {
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+.calendar-controls button:hover {
+  background-color: var(--tag-border);
+}
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #1f2e59;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  width: calc(100% / 7);
+  height: 100px;
+  position: relative;
+}
+.calendar-table th {
+  background-color: #14224a;
+  color: var(--muted-text-color);
+  font-weight: 600;
+  text-align: center;
+}
+.calendar-table td {
+  background-color: var(--card-bg);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+.calendar-table td:hover {
+  background-color: #1b2c51;
+}
+.calendar-table td .day-number {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.calendar-table td .scheduled-title {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--muted-text-color);
+  line-height: 1.2;
+}
+.schedule-editor {
+  background-color: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  margin: 1.5rem auto;
+}
+.schedule-editor.hidden {
+  display: none;
+}
+.schedule-editor h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+.schedule-editor select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--tag-border);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+.schedule-editor .editor-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .recipe-card img {
+    height: 160px;
+  }
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Brede mobiele ondersteuning voor schermen tot 768px: stapel kolommen en
+   verklein typografie voor betere leesbaarheid op kleine schermen. */
+@media (max-width: 768px) {
+  .builder-grid {
+    grid-template-columns: 1fr;
+  }
+  header nav a {
+    margin-left: 1rem;
+  }
+  .container {
+    padding: 1rem;
+  }
+  .recipe-form,
+  .recipes-list,
+  #requests-section {
+    padding: 1.5rem;
+  }
+  .recipe-details h2 {
+    font-size: 1.8rem;
+  }
+  .recipe-details h3 {
+    font-size: 1.3rem;
+  }
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+  .recipe-card p {
+    font-size: 0.85rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Nieuwe secties en componenten geïnspireerd op de look & feel van
+ * SkyShowtime. Deze stijlen ondersteunen een horizontale carrousel voor
+ * trending recepten, een categorieënbalk met ronde tabknoppen en een
+ * functiesectie met een combinatie van tekst en afbeelding.
+ */
+
+/* Trending sectie */
+.trending-section {
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+}
+.trending-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.trending-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  scroll-behavior: smooth;
+  /* Verberg standaard scrollbar voor een strakke look */
+  -ms-overflow-style: none; /* IE en Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.trending-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari en Opera */
+}
+/* Kaarten in de carrousel. Ze lijken op de gewone receptkaarten, maar hebben
+   een vaste breedte zodat ze mooi horizontaal scrollen. */
+.trending-card {
+  flex: 0 0 auto;
+  width: 220px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.trending-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.trending-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  background-color: #193d6d;
+}
+.trending-card .card-content {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.trending-card h4 {
+  margin: 0;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.trending-card p {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Browse-sectie met categorieën en zoekbalk */
+.browse-section {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+}
+.browse-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.search-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.search-filter input {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--tag-border);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-filter input::placeholder {
+  color: var(--muted-text-color);
+}
+.search-filter input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+/* Categorieënfilter (tags) in een horizontale balk met scrollbaarheid) */
+.categories-filter {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  /* Verberg scrollbars zodat de lijn netjes oogt */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.categories-filter::-webkit-scrollbar {
+  display: none;
+}
+.category {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+  background-color: var(--tag-bg);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+.category:hover {
+  border-color: var(--primary-color);
+}
+.category.active {
+  border-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end)) 1;
+  border-width: 2px;
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+/* Functiesectie met tekst en afbeelding */
+.features-section {
+  background-color: #0e1430;
+  padding: 4rem 0;
+  margin-top: 4rem;
+}
+.features-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.features-text {
+  flex: 1 1 300px;
+}
+.features-text h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+.features-text p {
+  margin: 0 0 1.5rem;
+  color: var(--muted-text-color);
+  font-size: 1rem;
+}
+.features-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.features-text li {
+  margin-bottom: 0.6rem;
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+}
+.features-text li::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+.features-image {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+}
+.features-image img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 800px) {
+  .features-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .features-text,
+  .features-image {
+    flex: 1 1 100%;
+  }
+  .features-image {
+    margin-top: 1.5rem;
+  }
+  .trending-card {
+    width: 180px;
+  }
+  .trending-card img {
+    height: 220px;
+  }
+}
