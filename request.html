@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maaltijd aanvragen | Meakie Meals</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo-container">
+          <img src="images/meakie_logo.png" alt="Meakie Meals logo" class="logo" />
+        </div>
+        <nav>
+          <a href="index.html">Home</a>
+          <a href="upcoming.html">Komende maaltijden</a>
+          <a href="builder.html">Beheer</a>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      <div class="recipe-form" style="max-width: 560px; margin: 2rem auto;">
+        <h2>Maaltijd aanvragen</h2>
+        <p>Hier kun je een maaltijd aanvragen bij de chef. Kies een bestaand recept of stel iets nieuws voor.</p>
+        <form id="request-form">
+          <div class="form-group">
+            <label for="req-name">Naam</label>
+            <input type="text" id="req-name" name="req-name" required />
+          </div>
+          <div class="form-group">
+            <label for="req-email">E-mail</label>
+            <input type="email" id="req-email" name="req-email" required />
+          </div>
+          <div class="form-group">
+            <label for="req-recipe">Recept kiezen</label>
+            <select id="req-recipe" name="req-recipe" required>
+              <option value="" disabled selected>Selecteer een optie</option>
+              <!-- Recepten worden hier toegevoegd via JS -->
+            </select>
+          </div>
+          <div class="form-group" id="suggestion-group" style="display: none;">
+            <label for="req-suggestion">Eigen suggestie</label>
+            <textarea id="req-suggestion" name="req-suggestion" rows="3" placeholder="Omschrijf je gewenste maaltijd"></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="button">Verstuur aanvraag</button>
+          </div>
+        </form>
+        <div id="request-success" style="display: none;">
+          <p>Bedankt voor je aanvraag! De chef ontvangt je verzoek en neemt contact met je op.</p>
+        </div>
+      </div>
+    </main>
+    <script src="request.js"></script>
+  </body>
+</html>

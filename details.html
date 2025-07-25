@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recept Details | Meakie Meals</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo-container">
+          <img src="images/meakie_logo.png" alt="Meakie Meals logo" class="logo" />
+        </div>
+        <nav>
+          <a href="index.html">Home</a>
+          <a href="request.html">Maaltijd aanvragen</a>
+          <a href="upcoming.html">Komende maaltijden</a>
+          <a href="builder.html">Beheer</a>
+        </nav>
+      </div>
+    </header>
+    <main class="container recipe-details-page">
+      <!-- Hero wrapper met afbeelding en donkere overlay waarop de titel wordt geplaatst. -->
+      <div class="details-hero-wrapper">
+        <img id="details-image" class="details-hero" alt="Recept foto" />
+        <div class="details-overlay">
+          <h2 id="details-title"></h2>
+        </div>
+      </div>
+      <!-- Contentgedeelte met omschrijving, ingrediënten en labels -->
+      <div class="details-content">
+        <section id="rating-section">
+          <h3>Beoordeling</h3>
+          <div id="rating-stars" class="stars"></div>
+          <p id="rating-average" class="rating-average"></p>
+        </section>
+
+        <section id="description-section">
+          <h3>Beschrijving</h3>
+          <p id="details-description"></p>
+        </section>
+        <section id="ingredients-section">
+          <h3>Ingrediënten</h3>
+          <ul id="details-ingredients"></ul>
+        </section>
+        <!-- Kruiden/specerijen afzonderlijk tonen indien beschikbaar -->
+        <section id="herbs-section">
+          <h3>Kruiden</h3>
+          <ul id="details-herbs"></ul>
+        </section>
+        <section id="labels-section">
+          <h3>Labels</h3>
+          <ul id="details-tags" class="tag-list"></ul>
+        </section>
+        <a href="index.html" class="cta-button back-button">← Terug naar overzicht</a>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
